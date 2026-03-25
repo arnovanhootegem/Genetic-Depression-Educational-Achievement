@@ -1,0 +1,73 @@
+Title: 
+Model
+
+Data:
+File is 
+"N:/durable/projects/36290998_Arno_GenRiskDeprEdu/01 - Data/cleaned - mplus - revised.dat";
+
+Variable:
+
+NAMES ARE w19_0634_lnr child_id father_id mother_id
+child_female child_cohort mother_cohort father_cohort
+child_fode father_fode mother_fode PC1 PC2 PC3 PC4 PC5 
+PC6 PC7 PC8 PC9 PC10 PGIdep PGIedu f_PGIdep f_PGIedu
+m_PGIdep m_PGIedu m_inc f_inc m_edu f_edu ENG05 ENG08
+LES05 LES08 LES09 REG05 REG08 REG09 ageat05 ageat08
+ageat09 AA1550 AA1551 AA1552 FF253 FF254 FF255 GPA ageatGPA
+grades05 grades08 grades09 family_id;
+
+USEVARIABLES ARE family_id REG09 LES09 PGIdep PGIedu m_PGIdep f_PGIdep 
+f_PGIedu m_PGIedu child_female ageat09
+PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 ;
+
+MISSING ARE all (-999);
+
+cluster = family_id ;
+
+DEFINE:
+
+STANDARDIZE ageat09 ;
+
+
+ANALYSIS:
+
+type = complex ;
+estimator = MLR ;
+process = 2 ;
+
+MODEL: 
+
+
+REG09 on PGIdep (a) 
+PGIedu (b) 
+m_PGIdep (c) 
+f_PGIdep (d)
+f_PGIedu (e) 
+m_PGIedu (f)  
+child_female ageat09 
+PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 ;
+
+LES09 on 
+PGIdep (g) 
+PGIedu (h) 
+m_PGIdep (i) 
+f_PGIdep (j) 
+f_PGIedu (k) 
+m_PGIedu (l) 
+child_female ageat09 
+PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 ;
+
+LES09 WITH REG09 ;
+
+model constraints:
+NEW (diff1 diff2 diff3 diff4 diff5 diff6) ;
+diff1 = a - g;
+diff2 = b - h;
+diff3 = c - i;
+diff4 = d - j;
+diff5 = e - k;
+diff6 = f - l;
+
+OUTPUT:
+
+standardized sampstat modindices;

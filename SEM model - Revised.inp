@@ -1,0 +1,100 @@
+Title: 
+Model
+
+Data:
+File is 
+"N:/durable/projects/36290998_Arno_GenRiskDeprEdu/01 - Data/cleaned - mplus - revised.dat";
+
+VARIANCE = NOCHECK ;
+
+Variable:
+
+NAMES ARE w19_0634_lnr child_id father_id mother_id
+child_female child_cohort mother_cohort father_cohort
+child_fode father_fode mother_fode PC1 PC2 PC3 PC4 PC5 
+PC6 PC7 PC8 PC9 PC10 PGIdep PGIedu f_PGIdep f_PGIedu
+m_PGIdep m_PGIedu m_inc f_inc m_edu f_edu ENG05 ENG08
+LES05 LES08 LES09 REG05 REG08 REG09 ageat05 ageat08
+ageat09 AA1550 AA1551 AA1552 FF253 FF254 FF255 GPA ageatGPA
+grades05 grades08 grades09 family_id;
+
+USEVARIABLES ARE family_id grades09 PGIdep child_female ageat09
+                PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 
+                PGIedu m_PGIedu f_PGIedu m_PGIdep f_PGIdep
+                m_edu f_edu m_inc f_inc AA1550 AA1551 AA1552 FF253 FF254 FF255
+                 weight;
+
+MISSING ARE all (-999);
+
+cluster = family_id ;
+
+weight = weight ;
+
+
+DEFINE:
+
+weight = 1 ;
+STANDARDIZE ageat09 m_edu f_edu m_inc f_inc ;
+
+ANALYSIS:
+
+Type = complex ;
+Bootstrap = 5000 ;
+repse = bootstrap ;
+process = 2 ;
+
+MODEL: 
+
+dep_mor by AA1550 AA1551 AA1552 ;
+dep_far by FF253 FF254 FF255 ;
+
+grades09 on PGIdep child_female ageat09
+                PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 
+                PGIedu m_PGIedu f_PGIedu m_PGIdep f_PGIdep
+                m_edu f_edu m_inc f_inc dep_mor
+                dep_far ;
+
+m_edu on PGIdep child_female ageat09
+                PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 
+                PGIedu m_PGIedu f_PGIedu m_PGIdep f_PGIdep;
+
+f_edu on PGIdep child_female ageat09
+                PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 
+                PGIedu m_PGIedu f_PGIedu m_PGIdep f_PGIdep;
+
+m_inc on PGIdep child_female ageat09
+                PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 
+                PGIedu m_PGIedu f_PGIedu m_PGIdep f_PGIdep;
+
+f_inc on PGIdep child_female ageat09
+                PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 
+                PGIedu m_PGIedu f_PGIedu m_PGIdep f_PGIdep;
+
+dep_mor on PGIdep child_female ageat09
+                PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 
+                PGIedu m_PGIedu f_PGIedu m_PGIdep f_PGIdep;
+
+dep_far on PGIdep child_female ageat09
+                PC1 PC2 PC3 PC4 PC5 PC6 PC7 PC8 PC9 PC10 
+                PGIedu m_PGIedu f_PGIedu m_PGIdep f_PGIdep;
+
+m_edu WITH f_edu m_inc f_inc dep_mor dep_far ;
+f_edu WITH m_inc f_inc dep_mor dep_far ;
+m_inc WITH f_inc dep_mor dep_far ;
+f_inc WITH dep_mor dep_far ;
+dep_mor WITH dep_far ;
+
+MODEL INDIRECT:
+
+grades09 IND PGIdep ;
+grades09 IND PGIedu ;
+grades09 IND m_PGIdep ;
+grades09 IND f_PGIdep ;
+grades09 IND m_PGIedu ;
+grades09 IND f_PGIedu ;
+grades09 IND child_female ;
+grades09 IND ageat09 ; 
+
+OUTPUT:
+
+standardized sampstat modindices;
